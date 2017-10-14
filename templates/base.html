@@ -1,13 +1,28 @@
 <!doctype html>
 <html>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
     <head>
         <title>{{title}}</title>
     </head>
     <nav>
+        <a href='/'>Home</a>
         <a href='/blog'>Main Blog Page</a>
         <a href='/new_post'>Add A Blog Entry</a>
+        <a href='/login'>Log In</a>
+        <a href='/logout'>Log Out</a>
+        <a href='/signup'>Create An Account</a>
+
     </nav>
 <body>
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <p class='error'>{{message}}</p>
+        {% endfor %}
+    {% endwith%}
 
     {% block content %}
     {% endblock %}
