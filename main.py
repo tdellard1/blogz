@@ -59,13 +59,19 @@ def empty(text):
 def blog():
     blogs = Blog.query.all()
     id = request.args.get('id')
+    user = request.args.get('user')
+    if user and user != '':
+        blog_total = Blog.query.filter_by(owner_id=user).all()
+        blog_id = request.args.get('blog.id')
+        return render_template('singleUser.html', blog_total=blog_total)
     if id and id != '':
         blog_id = request.args.get(Blog.id)
         blog = Blog.query.get(id)
         user = User.query.get(id)
         return render_template('individual_blog.html', title=blog.title, body=blog.body, owner=user.username)
-    else:
-        return render_template('blogs.html', blogs=blogs)
+    # - default '/blog' route
+    return render_template('blogs.html', blogs=blogs)
+    
 
 
 @app.route('/new_post', methods=['POST', 'GET'])
@@ -144,7 +150,8 @@ def login():
 
 @app.route('/')
 def index():
-    return redirect('/login') 
+    authors = User.query.all()
+    return render_template('index.html', authors=authors) 
 
 @app.route('/logout', methods=['POST', 'GET'])
 def logout():
