@@ -14,6 +14,7 @@ class Blog(db.Model):
     title = db.Column(db.String(120))
     body = db.Column(db.String(9999))
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User')
 
     def __init__(self, title, body, owner):
         self.title = title
@@ -60,6 +61,7 @@ def blog():
     blogs = Blog.query.all()
     id = request.args.get('id')
     user = request.args.get('user')
+    owner = User.query.filter_by(id=Blog.owner_id).first()
     if user and user != '':
         blog_total = Blog.query.filter_by(owner_id=user).all()
         blog_id = request.args.get('blog.id')
@@ -70,7 +72,7 @@ def blog():
         user = User.query.get(id)
         return render_template('individual_blog.html', title=blog.title, body=blog.body, owner=user.username)
     # - default '/blog' route
-    return render_template('blogs.html', blogs=blogs)
+    return render_template('blogs.html', blogs=blogs, owner=owner)
     
 
 
